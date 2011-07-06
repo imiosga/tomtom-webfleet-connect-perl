@@ -1,7 +1,7 @@
 #!/usr/bin/perl -Ilib -w
 
 #
-# Copyright (c) 2006-2010, TomTom International B.V.
+# Copyright (c) 2006-2011, TomTom International B.V.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -56,7 +56,7 @@ L<TomTom::WEBFLEET::Connect>
 
 =head1 COPYRIGHT
 
-Copyright 2006-2010 TomTom International B.V.
+Copyright 2006-2011 TomTom International B.V.
 
 All rights reserved.
 
@@ -72,7 +72,7 @@ GetOptions(\%opt, 'account=s', 'username=s', 'password=s', 'trace!', 'xml', 'man
 pod2usage(-exitstatus => 0, -verbose => 2) if $opt{man};
 pod2usage(2) if (!defined($opt{account}) or !defined($opt{username}) or !defined($opt{password}));
 
-my $connect = new TomTom::WEBFLEET::Connect(%opt);
+my $connect = new TomTom::WEBFLEET::Connect((%opt, useISO8601=>'true'));
 my @objects;
 my $r = $connect->showObjectReport();
 if ($r->is_success) {

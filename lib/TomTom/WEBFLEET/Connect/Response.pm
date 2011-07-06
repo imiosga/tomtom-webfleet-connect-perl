@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2006-2010 TomTom International B.V.
+# Copyright (c) 2006-2011 TomTom International B.V.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,7 @@
 package TomTom::WEBFLEET::Connect::Response;
 use Text::ParseWords;
 use Data::Dumper;
+use Encode;
 
 sub new {
   my $proto = shift;
@@ -54,7 +55,7 @@ sub new {
         $self->{error}{code} = $1;
         $self->{error}{desc} = $2;
       } else {
-        $self->{data}{raw} = $response->content;
+        $self->{data}{raw} = decode("utf8", $response->content);
       }
     } else {
       $response->status_line =~ /^(\d+)\s+(.*)$/;

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2006-2010 TomTom International B.V.
+# Copyright (c) 2006-2011 TomTom International B.V.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -111,13 +111,21 @@ my %methods = (
   showVehicleReport => 'showVehicleReportExtern',
   showContracts => 'showContracts',
   updateVehicle => 'updateVehicle',
-  showObjectGroupReport => 'showObjectGroupReportExtern',
-  showObjectGroupObjectReport => 'showObjectGroupObjectReportExtern',
+  showObjectGroups => 'showObjectGroups',
+  showObjectGroupObjects => 'showObjectGroupObjects',
+  attachObjectToGroup => 'attachObjectToGroup',
+  detachObjectFromGroup => 'detachObjectFromGroup',
+  insertObjectGroup => 'insertObjectGroup',
+  deleteObjectGroup => 'deleteObjectGroup',
+  updateObjectGroup => 'updateObjectGroup',
+  #showObjectGroupReport => 'showObjectGroupReportExtern', # deprecated
+  #showObjectGroupObjectReport => 'showObjectGroupObjectReportExtern', # deprecated
 
   showDriverReport => 'showDriverReportExtern',
   insertDriver => 'insertDriverExtern',
   updateDriver => 'updateDriverExtern',
   deleteDriver => 'deleteDriverExtern',
+  showOptiDriveIndicator => 'showOptiDriveIndicator',
 
   showAddressReport => 'showAddressReportExtern',
   insertAddress => 'insertAddressExtern',
@@ -134,11 +142,14 @@ my %methods = (
   showTripSummaryReport => 'showTripSummaryReportExtern',
   showLogbookReport => 'showLogbookReportExtern',
   showWorkingTimes => 'showWorkingTimes',
-  showObjectAccelerationEvents => 'showObjectAccelerationEvents',
-  showObjectSpeedingEvents => 'showObjectSpeedingEvents',
+  #showObjectAccelerationEvents => 'showObjectAccelerationEvents', # deprecated
+  #showObjectSpeedingEvents => 'showObjectSpeedingEvents', # deprecated
   showStandStills => 'showStandStills',
   showIdleExceptions => 'showIdleExceptions',
+
   showIOReport => 'showIOReportExtern',
+  showAccelerationEvents => 'showAccelerationEvents',
+  showSpeedingEvents => 'showSpeedingEvents',
 
   showOrderReport => 'showOrderReportExtern',
   sendOrder => 'sendOrderExtern',
@@ -161,6 +172,11 @@ my %methods = (
   showEventReport => 'showEventReportExtern',
   acknowledgeEvent => 'acknowledgeEventExtern',
   resolveEvent => 'resolveEventExtern',
+
+  geocodeAddress => 'geocodeAddress',
+  calcRouteSimple => 'calcRouteSimpleExtern',
+
+  showSettings => 'showSettings',
 );
 
 sub new {
@@ -176,6 +192,8 @@ sub new {
     },
     global => {
       lang => defined($params{lang})?$params{lang}:'en',
+      apikey => $params{apikey},
+      useISO8601 => (defined($params{useISO8601}) and grep(/$params{useISO8601}/i, qw(1 true yes))) ? 'true' : undef,
     },
     config => {
       trace => defined($params{trace})?$params{trace}:0,
@@ -227,6 +245,8 @@ sub make_call {
       action => $params{action},
       %{$params{query}}
     };
+    $qsh->{apikey} = $self->{global}{apikey} if defined $self->{global}{apikey};
+    $qsh->{useISO8601} = $self->{global}{useISO8601} if defined $self->{global}{useISO8601};
     $qs .= join('&', map($_.'='.$qsh->{$_},sort keys(%$qsh)));
 
     my $ua = LWP::UserAgent->new;
