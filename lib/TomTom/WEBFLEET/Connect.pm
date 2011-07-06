@@ -103,7 +103,7 @@ use File::Temp;
 
 
 BEGIN {
-   our $VERSION = 2.01;
+   our $VERSION = 2.10;
 }
 
 my %methods = (
